@@ -38,7 +38,7 @@ TitleSwitcher lists the windows on the current Space, plus minimized ones.
 There are no prebuilt releases yet, so build from source:
 
 ```sh
-git clone https://github.com/AndersSpringborg/title-switcher.git
+git clone https://github.com/aasp-dev/title-switcher.git
 cd title-switcher
 ./scripts/bundle.sh                         # builds build/TitleSwitcher.app
 cp -R build/TitleSwitcher.app /Applications/
