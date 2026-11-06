@@ -4,11 +4,12 @@
 # VERSION sets CFBundleShortVersionString (default 0.1.0).
 set -euo pipefail
 cd "$(dirname "$0")/.."
-swift build -c release
+build_flags=(-c release --arch arm64 --arch x86_64)  # universal binary
+swift build "${build_flags[@]}"
 app=build/TitleSwitcher.app
 rm -rf "$app"
 mkdir -p "$app/Contents/MacOS"
-cp "$(swift build -c release --show-bin-path)/TitleSwitcher" "$app/Contents/MacOS/"
+cp "$(swift build "${build_flags[@]}" --show-bin-path)/TitleSwitcher" "$app/Contents/MacOS/"
 cat > "$app/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
