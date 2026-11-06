@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Builds build/TitleSwitcher.app. Ad-hoc signed by default, so macOS asks for Accessibility again after
 # each rebuild; set SIGN_IDENTITY to a stable certificate to avoid that.
+# VERSION sets CFBundleShortVersionString (default 0.1.0).
 set -euo pipefail
 cd "$(dirname "$0")/.."
 swift build -c release
@@ -16,7 +17,7 @@ cat > "$app/Contents/Info.plist" <<PLIST
   <key>CFBundleName</key><string>TitleSwitcher</string>
   <key>CFBundleExecutable</key><string>TitleSwitcher</string>
   <key>CFBundlePackageType</key><string>APPL</string>
-  <key>CFBundleShortVersionString</key><string>0.1.0</string>
+  <key>CFBundleShortVersionString</key><string>${VERSION:-0.1.0}</string>
   <key>LSMinimumSystemVersion</key><string>14.0</string>
   <key>LSUIElement</key><true/>
 </dict></plist>

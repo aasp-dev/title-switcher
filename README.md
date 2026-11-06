@@ -35,7 +35,16 @@ TitleSwitcher lists the windows on the current Space, plus minimized ones.
 
 ## Install
 
-There are no prebuilt releases yet, so build from source:
+Download `TitleSwitcher.zip` from the [latest release](https://github.com/aasp-dev/title-switcher/releases/latest), unzip it, and move `TitleSwitcher.app` to `/Applications`.
+
+The app is not notarized, so macOS blocks it the first time. Clear the quarantine flag once:
+
+```sh
+xattr -dr com.apple.quarantine /Applications/TitleSwitcher.app
+open /Applications/TitleSwitcher.app
+```
+
+### Build from source
 
 ```sh
 git clone https://github.com/aasp-dev/title-switcher.git
@@ -61,6 +70,12 @@ To start TitleSwitcher at login, add it under **System Settings → General → 
 swift test              # run the core logic tests
 swift build             # debug build
 ./scripts/bundle.sh     # release .app bundle
+```
+
+To publish a release, push a version tag. CI runs the tests, builds the app, and attaches `TitleSwitcher.zip` to a GitHub Release:
+
+```sh
+git tag v0.1.0 && git push origin v0.1.0
 ```
 
 The code is split into two targets:
