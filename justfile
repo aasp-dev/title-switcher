@@ -31,5 +31,5 @@ install: bundle
 
 # Tag and push a release, e.g. `just release 0.2.0`
 release version:
-    git tag v{{version}}
+    git tag -m "v{{version}}" v{{version}}
     git push origin v{{version}}
