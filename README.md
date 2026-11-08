@@ -62,20 +62,24 @@ The bundle is ad-hoc signed by default, so macOS treats every rebuild as a new a
 SIGN_IDENTITY="Apple Development: Your Name (TEAMID)" ./scripts/bundle.sh
 ```
 
-To start TitleSwitcher at login, add it under **System Settings → General → Login Items**.
+To start TitleSwitcher at login, choose **Open at Login** from its menu bar icon.
 
 ## Development
 
+Common commands are in the [justfile](justfile) (run `just` to list them):
+
 ```sh
-swift test              # run the core logic tests
-swift build             # debug build
-./scripts/bundle.sh     # release .app bundle
+just test       # run the core logic tests
+just build      # debug build
+just bundle     # release .app bundle
+just install    # bundle, move to /Applications, and launch
+just icon       # regenerate Resources/AppIcon.icns from scripts/make-icon.swift
 ```
 
 To publish a release, push a version tag. CI runs the tests, builds the app, and attaches `TitleSwitcher.zip` to a GitHub Release:
 
 ```sh
-git tag v0.1.0 && git push origin v0.1.0
+just release 0.1.0      # tags v0.1.0 and pushes it
 ```
 
 The code is split into two targets:
