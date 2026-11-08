@@ -33,6 +33,7 @@ jobs:
         run: |
           version="${GITHUB_REF_NAME#v}"
           sha256="$(shasum -a 256 TitleSwitcher.zip | cut -d' ' -f1)"
+          gh auth setup-git
           gh repo clone aasp-dev/homebrew-tap tap
           mkdir -p tap/Casks
           ./scripts/make-cask.sh "$version" "$sha256" > tap/Casks/title-switcher.rb
