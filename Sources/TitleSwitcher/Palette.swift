@@ -18,6 +18,7 @@ final class Palette: NSObject, NSTextFieldDelegate, NSWindowDelegate, NSTableVie
     private var allWindows = [SwitchableWindow]()
     private var rows = [SwitchableWindow]()
     private var keyMonitor: Any?
+    private var optionRelease = OptionRelease()
 
     override init() {
         super.init()
@@ -29,11 +30,12 @@ final class Palette: NSObject, NSTextFieldDelegate, NSWindowDelegate, NSTableVie
     func show() {
         allWindows = WindowSource.current()
         field.stringValue = ""
+        optionRelease = OptionRelease()
         refilter()
         NSApp.activate()
         panel.makeKeyAndOrderFront(nil)
         panel.makeFirstResponder(field)
-        keyMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] in self?.handle($0) }
+        keyMonitor = NSEvent.addLocalMonitorForEvents(matching: [.keyDown, .flagsChanged]) { [weak self] in self?.handle($0) }
     }
 
     func hide() {
@@ -47,10 +49,15 @@ final class Palette: NSObject, NSTextFieldDelegate, NSWindowDelegate, NSTableVie
         guard !rows.isEmpty else { return }
         let next = (table.selectedRow + delta + rows.count) % rows.count
         select(next)
+        optionRelease.selectionMoved(optionHeld: NSEvent.modifierFlags.contains(.option))
     }
 
     private func handle(_ event: NSEvent) -> NSEvent? {
         let flags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
+        if event.type == .flagsChanged {
+            if !flags.contains(.option), optionRelease.shouldFocusOnRelease { focusSelection() }
+            return event
+        }
         guard !flags.contains(.command), !flags.contains(.control) else { return event }
         if let row = DigitKey.rowIndex(forKeyCode: event.keyCode) {
             if row < rows.count { focus(rows[row]) }
@@ -103,6 +110,7 @@ final class Palette: NSObject, NSTextFieldDelegate, NSWindowDelegate, NSTableVie
     }
 
     func controlTextDidChange(_ notification: Notification) {
+        optionRelease.typed()
         refilter()
     }
 
