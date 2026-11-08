@@ -2,6 +2,12 @@
 
 A lean, keyboard-driven window switcher for macOS: press a shortcut, get a list of window titles, type to search, hit return.
 
+[![Latest release](https://img.shields.io/github/v/release/aasp-dev/title-switcher)](https://github.com/aasp-dev/title-switcher/releases/latest)
+
+```sh
+brew install --cask aasp-dev/tap/title-switcher
+```
+
 ![TitleSwitcher palette](docs/screenshot.png)
 
 ## Features
