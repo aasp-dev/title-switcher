@@ -35,13 +35,19 @@ TitleSwitcher lists the windows on the current Space, plus minimized ones.
 
 ## Install
 
-Download `TitleSwitcher.zip` from the [latest release](https://github.com/aasp-dev/title-switcher/releases/latest), unzip it, and move `TitleSwitcher.app` to `/Applications`.
+With [Homebrew](https://brew.sh):
 
-The app is not notarized, so macOS blocks it the first time. Clear the quarantine flag once:
+```sh
+brew install --cask aasp-dev/tap/title-switcher
+open /Applications/TitleSwitcher.app
+```
+
+Upgrade with `brew upgrade --cask title-switcher`.
+
+The app is not notarized. The cask clears the quarantine flag so macOS doesn't block it; if you install from the [latest release](https://github.com/aasp-dev/title-switcher/releases/latest) zip by hand, do that yourself:
 
 ```sh
 xattr -dr com.apple.quarantine /Applications/TitleSwitcher.app
-open /Applications/TitleSwitcher.app
 ```
 
 ### Build from source
@@ -76,7 +82,7 @@ just install    # bundle, move to /Applications, and launch
 just icon       # regenerate Resources/AppIcon.icns from scripts/make-icon.swift
 ```
 
-To publish a release, push a version tag. CI runs the tests, builds the app, and attaches `TitleSwitcher.zip` to a GitHub Release:
+To publish a release, push a version tag. CI runs the tests, builds the app, attaches `TitleSwitcher.zip` to a GitHub Release, and updates the cask in [aasp-dev/homebrew-tap](https://github.com/aasp-dev/homebrew-tap) (this needs a `HOMEBREW_TAP_TOKEN` secret with write access to that repo):
 
 ```sh
 just release 0.1.0      # tags v0.1.0 and pushes it

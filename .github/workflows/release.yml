@@ -26,3 +26,19 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release create "$GITHUB_REF_NAME" TitleSwitcher.zip --title "$GITHUB_REF_NAME" --generate-notes
+
+      - name: Update Homebrew cask
+        env:
+          GH_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          sha256="$(shasum -a 256 TitleSwitcher.zip | cut -d' ' -f1)"
+          gh repo clone aasp-dev/homebrew-tap tap
+          mkdir -p tap/Casks
+          ./scripts/make-cask.sh "$version" "$sha256" > tap/Casks/title-switcher.rb
+          cd tap
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Casks/title-switcher.rb
+          git commit -m "title-switcher $version"
+          git push
