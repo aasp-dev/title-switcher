@@ -1,7 +1,8 @@
 import AppKit
 import Carbon.HIToolbox
+import ServiceManagement
 
-final class AppDelegate: NSObject, NSApplicationDelegate {
+final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     private let palette = Palette()
     private var hotKey: HotKey?
     private var statusItem: NSStatusItem?
@@ -21,6 +22,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         item.button?.image = NSImage(systemSymbolName: "macwindow.on.rectangle", accessibilityDescription: "TitleSwitcher")
         let menu = NSMenu()
         menu.addItem(withTitle: "Show (⌥⇥)", action: #selector(showFromMenu), keyEquivalent: "").target = self
+        menu.addItem(withTitle: "Open at Login", action: #selector(toggleOpenAtLogin), keyEquivalent: "").target = self
         menu.addItem(.separator())
         menu.addItem(withTitle: "Quit TitleSwitcher", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         item.menu = menu
@@ -29,6 +31,28 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc private func showFromMenu() {
         palette.show()
+    }
+
+    @objc private func toggleOpenAtLogin() {
+        let service = SMAppService.mainApp
+        do {
+            if service.status == .enabled {
+                try service.unregister()
+            } else {
+                try service.register()
+                if service.status == .requiresApproval { SMAppService.openSystemSettingsLoginItems() }
+            }
+        } catch {
+            NSApp.activate()
+            NSAlert(error: error).runModal()
+        }
+    }
+
+    func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+        if menuItem.action == #selector(toggleOpenAtLogin) {
+            menuItem.state = SMAppService.mainApp.status == .enabled ? .on : .off
+        }
+        return true
     }
 }
 
