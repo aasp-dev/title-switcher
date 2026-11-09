@@ -66,3 +66,29 @@ private func window(_ id: UInt32, _ title: String, _ app: String = "App") -> Win
         #expect(DigitKey.rowIndex(forKeyCode: 29) == nil)
     }
 }
+
+@Suite struct OptionReleaseTests {
+    @Test func releasingOptionRightAfterSummonKeepsThePaletteOpenForSearch() {
+        let release = OptionRelease()
+        #expect(!release.shouldFocusOnRelease)
+    }
+
+    @Test func releasingOptionAfterMovingWhileHoldingItFocusesTheSelection() {
+        var release = OptionRelease()
+        release.selectionMoved(optionHeld: true)
+        #expect(release.shouldFocusOnRelease)
+    }
+
+    @Test func movingWithoutOptionHeldDoesNotFocusOnALaterRelease() {
+        var release = OptionRelease()
+        release.selectionMoved(optionHeld: false)
+        #expect(!release.shouldFocusOnRelease)
+    }
+
+    @Test func typingASearchCancelsFocusOnRelease() {
+        var release = OptionRelease()
+        release.selectionMoved(optionHeld: true)
+        release.typed()
+        #expect(!release.shouldFocusOnRelease)
+    }
+}

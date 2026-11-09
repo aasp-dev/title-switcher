@@ -51,3 +51,20 @@ public enum DigitKey {
         keyCodes.firstIndex(of: keyCode)
     }
 }
+
+/// ⌘⇥-style switching: hold ⌥, press ⇥ to move, release ⌥ to focus the selection. A quick ⌥⇥ tap
+/// leaves the palette open for searching, so release only focuses after moving with ⌥ still held.
+public struct OptionRelease {
+    public private(set) var shouldFocusOnRelease = false
+
+    public init() {}
+
+    public mutating func selectionMoved(optionHeld: Bool) {
+        if optionHeld { shouldFocusOnRelease = true }
+    }
+
+    /// Typing means the user is searching and will confirm with ↩.
+    public mutating func typed() {
+        shouldFocusOnRelease = false
+    }
+}
