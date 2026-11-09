@@ -4,17 +4,21 @@ import ServiceManagement
 
 final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     private let palette = Palette()
-    private var hotKey: HotKey?
+    private var hotKeys = [HotKey]()
     private var statusItem: NSStatusItem?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         AXIsProcessTrustedWithOptions([kAXTrustedCheckOptionPrompt.takeUnretainedValue(): true] as CFDictionary)
-        hotKey = HotKey(keyCode: kVK_Tab, modifiers: optionKey) { [weak self] in self?.summon() }
+        hotKeys = [
+            HotKey(keyCode: kVK_Tab, modifiers: optionKey) { [weak self] in self?.summon(step: 1) },
+            HotKey(keyCode: kVK_Tab, modifiers: optionKey | shiftKey) { [weak self] in self?.summon(step: -1) },
+        ]
         statusItem = makeStatusItem()
     }
 
-    private func summon() {
-        palette.isVisible ? palette.moveSelection(by: 1) : palette.show()
+    /// Opening with ⌥⇧⇥ starts at the last row, like ⌘⇧⇥.
+    private func summon(step: Int) {
+        palette.isVisible ? palette.moveSelection(by: step) : palette.show(startAtLastRow: step < 0)
     }
 
     private func makeStatusItem() -> NSStatusItem {

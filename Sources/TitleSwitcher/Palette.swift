@@ -27,11 +27,12 @@ final class Palette: NSObject, NSTextFieldDelegate, NSWindowDelegate, NSTableVie
 
     var isVisible: Bool { panel.isVisible }
 
-    func show() {
+    func show(startAtLastRow: Bool = false) {
         allWindows = WindowSource.current()
         field.stringValue = ""
         optionRelease = OptionRelease()
         refilter()
+        if startAtLastRow, !rows.isEmpty { select(rows.count - 1) }
         NSApp.activate()
         panel.makeKeyAndOrderFront(nil)
         panel.makeFirstResponder(field)

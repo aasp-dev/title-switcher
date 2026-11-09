@@ -24,7 +24,7 @@ brew install --cask aasp-dev/tap/title-switcher
 | --- | --- |
 | **⌥⇥** | Open the palette |
 | **⌥⇥** again, **⇥**, **↓** | Move down |
-| **⇧⇥**, **↑** | Move up |
+| **⌥⇧⇥**, **⇧⇥**, **↑** | Move up (**⌥⇧⇥** opens the palette at the last row) |
 | **1–9** | Focus that row (works while still holding ⌥) |
 | *type* | Filter by window title or app name |
 | **↩** | Focus the selected window |
@@ -33,7 +33,7 @@ brew install --cask aasp-dev/tap/title-switcher
 
 With no query, row 2 (your previous window) is preselected, so **⌥⇥ ↩** toggles between your two most recent windows.
 
-Like **⌘⇥**, you can hold ⌥, tap ⇥ until the window you want is selected, and let go of ⌥ to switch. A quick **⌥⇥** tap keeps the palette open so you can type a search.
+Like **⌘⇥**, you can hold ⌥, tap ⇥ (or ⇧⇥ to go back) until the window you want is selected, and let go of ⌥ to switch. A quick **⌥⇥** tap keeps the palette open so you can type a search.
 
 TitleSwitcher lists the windows on the current Space, plus minimized ones.
 
